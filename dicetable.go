@@ -2,6 +2,7 @@ package main
 
 import (
 	"dicetable/dice"
+	"dicetable/tablecommands"
 	"flag"
 	"fmt"
 	"strings"
@@ -27,7 +28,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	} else if *interactivePtr {
-		InteractiveLoop(table)
+		tablecommands.InteractiveLoop(table)
 	} else {
 		table.Roll()
 		for _, pool := range table.Pools {

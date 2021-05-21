@@ -1,4 +1,4 @@
-package main
+package tablecommands
 
 import (
 	"bufio"
@@ -55,7 +55,25 @@ func ParseCommand(input string, table dice.Table) string {
 }
 
 func help(table dice.Table, args []string) string {
-	return ""
+	return `Commands:
+	help -	Display this prompt
+	roll - Roll the dice in any number of pools or roll all dice in the table
+		format: roll [pool/table] {if pool} [pool names]
+		examples: roll pool strength, roll table
+	add - Add a die to a pool or a new pool to the table
+		format: add [die/pool] {if die} [pool names...] {if pool} [pool names:XdY...]
+		examples: add die strength agility, add pool power:4d6
+	subtract - Subtract a dice from any number of pools, or pools from the table
+		format: subtract [die/pool] {if die} [pool names:number of dice] {if pool} [pool names]
+		examples: subtract die strngth:3 agility:1, subtract pool strength agility
+	view - prints a discription of the pool or the whole table
+		format: view [pool/table] {if pool} [pool names]
+		examples: view pool strength, view table
+	clear - removes all dice from a pool or all pools from the table
+		format - clear [pool/table] {if pool} [pool names]
+		examples: clear pool strength, clear table
+	set - set a die to a number, all dice in a pool to the same number, or all dice on the table to the same number
+		format: set die [pool name] [die position] [set to]/pool [pool name] [set to]/table [set to]`
 }
 
 func roll(table dice.Table, args []string) string {
