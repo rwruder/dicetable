@@ -1,8 +1,8 @@
 package main
 
 import (
-	"dicetable/dice"
-	"dicetable/tablecommands"
+	"dicetable/internal/tablecommands"
+	"dicetable/pkg/dice"
 	"flag"
 	"fmt"
 	"strings"

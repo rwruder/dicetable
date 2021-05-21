@@ -2,7 +2,7 @@ package tablecommands
 
 import (
 	"bufio"
-	"dicetable/dice"
+	"dicetable/pkg/dice"
 	"fmt"
 	"os"
 	"strconv"
