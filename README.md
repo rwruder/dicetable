@@ -43,9 +43,12 @@ Running dicetable with the -i flag will open up a prompt for the table with the 
 	set - set a die to a number, all dice in a pool to the same number, or all dice on the table to the same number
 		format: set [die] [die position] [set to]/[pool] [pool name] [set to]/[table] [set to]
 
-###### BUGS:
-- In tablecommands entering anything other than one of the predetermined commands causes a crash should display an error message instead
-
 ###### Improvements:
 - Remove function to remove specific dice from pools based on position or what number they are facing
 - function to prompt for user input to add a check to make sure the user wants to clear a pool or table
+
+###### Future Updates:
+- Logging
+- Database
+- Server
+- Discord Bot

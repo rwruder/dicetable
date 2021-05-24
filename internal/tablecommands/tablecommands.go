@@ -51,7 +51,12 @@ func ParseCommand(input string, table dice.Table) string {
 		"clear":    clear,
 		"set":      set,
 	}
-	return commands[command](table, args)
+	if _, ok := commands[command]; ok {
+		return commands[command](table, args)
+	} else {
+		return fmt.Sprintf("%s is not a valid command. Maybe try help for a list of valid commands.", input)
+	}
+	
 }
 
 func help(table dice.Table, args []string) string {
@@ -80,7 +85,20 @@ func roll(table dice.Table, args []string) string {
 	return_str := "Your Rolls:\n"
 	var str string
 
+	// Make sure that the user provides arguments
+	if len(args) < 1 {
+		return "Use roll pool [pool name] or roll table."
+	}
+
 	if args[0] == "pool" {
+		// Pool argument rolls a list of pools in the table
+
+		// Make sure that the pool name is provided with the pool argument
+		if len(args[1:]) < 1 {
+			return "Not the right ammount of arguments for roll pool [pool name]."
+		}
+
+		// Roll the dice for each pool name provided
 		for _, name := range args[1:] {
 			if pool, ok := table.Pools[name]; ok {
 				pool.Roll()
@@ -91,6 +109,8 @@ func roll(table dice.Table, args []string) string {
 			return_str = return_str + str
 		}
 	} else if args[0] == "table" {
+		// Roll each pool in the table if the table argument is provided
+
 		table.Roll()
 		for name, pool := range table.Pools {
 			str = fmt.Sprintf("Pool %s: %d Total: %d\n", name, pool.List(), pool.Total())
@@ -106,8 +126,18 @@ func add(table dice.Table, args []string) string {
 	return_str := "Added:\n"
 	var str string
 
+	// Make sure at least two arguments are provided
+	if len(args) < 2 {
+		return "Not enough arguments provided. add [die/pool] [pool name/pool name:dice]"
+	}
+
 	if args[0] == "die" {
+		// add a die to a pool
+
+		// loop through each name provided
 		for _, name := range args[1:] {
+
+			// Make sure each pool name provided exisits
 			if pool, ok := table.Pools[name]; ok {
 				pool.Add()
 				str = fmt.Sprintf("Successfully added die to pool %s. Now there are %dd%ds\n", name, pool.Sides, len(pool.Dice))
@@ -117,12 +147,18 @@ func add(table dice.Table, args []string) string {
 			return_str = return_str + str
 		}
 	} else if args[0] == "pool" {
+		// add a pool to the table
+
+		// loop through each name provided
 		for n, arg := range args[1:] {
+
+			// make sure that the name and XdY are separated by a colon
 			if !strings.Contains(arg, ":") {
 				str = fmt.Sprintf("Arg %d failed. Format is [name]:[XdY]", n)
 				return_str = return_str + str
 				continue
 			}
+ 
 			a := strings.Split(arg, ":")
 			name := a[0]
 			pool, err := dice.ParseDiceString(a[1])
@@ -145,6 +181,11 @@ func subtract(table dice.Table, args []string) string {
 	return_str := "Subtracted:"
 	var str string
 	var err error
+
+	// Make sure at least two arguments are provided
+	if len(args) < 2 {
+		return "Not enough arguments provided. subtract [die/pool] [pool name:number of dice/pool name]"
+	}
 
 	if args[0] == "die" {
 		for _, name := range args[1:] {
@@ -196,10 +237,22 @@ func subtract(table dice.Table, args []string) string {
 }
 
 func view(table dice.Table, args []string) string {
+	// Print a descriptions of specific pools view pool [pool names...]
+	// or all pools. view table
 	return_str := "Pool Descriptions:\n"
 	var str string
 
+	// Make sure at least one argument is provided
+	if len(args) < 1 {
+		return "Not enough arguments provided. view [pool/table] [pool name]"
+	}
+
 	if args[0] == "pool" {
+		// Make sure at least one additonal argument is provided
+		if len(args[1:]) < 1 {
+			return "Not enough arguments provided. view [pool/table] [pool name]"
+		}
+
 		for _, name := range args[1:] {
 			if _, ok := table.Pools[name]; !ok {
 				str = fmt.Sprintf("%s is not the name of a pool on the table.\n", name)
@@ -221,10 +274,22 @@ func view(table dice.Table, args []string) string {
 }
 
 func clear(table dice.Table, args []string) string {
+	// Clears all dice from a number of pools. clear pool [pool names...]
+	// or clears all pools from the table. clear table
 	return_str := "Cleared:\n"
 	var str string
 
+	// Make sure at least one argument is provided
+	if len(args) < 1 {
+		return "Not enough arguments provided. clear [pool/table] [pool name]"
+	}
+
 	if args[0] == "pool" {
+		// Make sure at least one additonal argument is provided
+		if len(args[1:]) < 1 {
+			return "Not enough arguments provided. clear [pool/table] [pool name]"
+		}
+
 		for _, name := range args[1:] {
 			if _, ok := table.Pools[name]; !ok {
 				str = fmt.Sprintf("%s is not the name of a pool on the table.\n", name)
@@ -250,8 +315,16 @@ func clear(table dice.Table, args []string) string {
 }
 
 func set(table dice.Table, args []string) string {
+	// Set a specific die in a table to a number. set die [pool name] [die position] [set to]
+	// or set all dice in a pool to a number. set pool [pool names...] [set to]
+	// or set all dice in the table to a specific number
 	return_str := "Set:"
 	var str string
+
+	// Make sure at least one argument is provided
+	if len(args) < 1 {
+		return "Not enough arguments provided. set [die/pool/table] [pool names...] [die position] [set to]"
+	}
 
 	if args[0] == "die" {
 		if len(args) != 4 {
