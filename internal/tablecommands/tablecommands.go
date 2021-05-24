@@ -4,12 +4,38 @@ import (
 	"bufio"
 	"dicetable/pkg/dice"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"strings"
 )
 
 func InteractiveLoop(table dice.Table) {
+	// start a new log file for the table if there is not one already
+
+	log_name, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log_name += "/dice-logs/"
+
+	err = os.Mkdir(log_name, 0777)
+	if os.IsNotExist(err) {
+		log.Fatal(err)
+	}
+
+	if table.Name == "" {
+		log_name += "NoName"
+	} else {
+		log_name += table.Name
+	}
+	fmt.Println(log_name)
+	file, err := os.OpenFile(log_name+".txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0777)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.SetOutput(file)
+
 	// A looping function meant to simulate rolling dice at a table
 	for {
 		// Display the prompt. If the table has a name add it to the prompt
@@ -51,12 +77,15 @@ func ParseCommand(input string, table dice.Table) string {
 		"clear":    clear,
 		"set":      set,
 	}
+
 	if _, ok := commands[command]; ok {
-		return commands[command](table, args)
+		output := commands[command](table, args)
+		log.Println(output)
+		return output
 	} else {
 		return fmt.Sprintf("%s is not a valid command. Maybe try help for a list of valid commands.", input)
 	}
-	
+
 }
 
 func help(table dice.Table, args []string) string {
@@ -158,7 +187,7 @@ func add(table dice.Table, args []string) string {
 				return_str = return_str + str
 				continue
 			}
- 
+
 			a := strings.Split(arg, ":")
 			name := a[0]
 			pool, err := dice.ParseDiceString(a[1])

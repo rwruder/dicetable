@@ -1,7 +1,7 @@
 package dice_test
 
 import (
-	"dicetable/dice"
+	"dicetable/pkg/dice"
 	"testing"
 )
 
