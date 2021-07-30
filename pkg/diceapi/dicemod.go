@@ -1,4 +1,4 @@
-package diceAPI
+package diceapi
 
 import (
 	"time"
