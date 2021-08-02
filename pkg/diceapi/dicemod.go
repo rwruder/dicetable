@@ -7,14 +7,14 @@ import (
 type Table struct {
 	ID          int       `json:"ID"`
 	Name        string    `json:"Name"`
-	Creator     int       `json:"Creator"`
+	Owner       int       `json:"Owner"`
 	Description string    `json:"Description"`
 	DateCreated time.Time `json:"DateCreated"`
 }
 
 type Pool struct {
 	ID          int       `json:"ID"`
-	Table       int       `json:"Table"`
+	TableID     int       `json:"TableID"`
 	Description string    `json:"Description"`
 	DiceSize    int       `json:"DiceSize"`
 	Dice        []int     `json:"Dice"`
@@ -23,8 +23,9 @@ type Pool struct {
 
 type Character struct {
 	ID          int       `json:"ID"`
-	User        int       `json:"User"`
-	Table       int       `json:"Table"`
+	Name        string    `json:"Name"`
+	UserID      int       `json:"UserID"`
+	TableID     int       `json:"TableID"`
 	DateCreated time.Time `json:"DateCreated"`
 }
 
@@ -36,12 +37,13 @@ type User struct {
 }
 
 type Roll struct {
-	ID           int    `json:"ID"`
-	Table        int    `json:"Table"`
-	User         int    `json:"User"`
-	Character    int    `json:"Character"`
-	Pool         int    `json:"Pool"`
-	TypeOfChange string `json:"TypeOfChange"`
-	DiceBefore   []int  `json:"DiceBefore"`
-	DiceAfter    []int  `json:"DiceAfter"`
+	ID           int       `json:"ID"`
+	TableID      int       `json:"TableID"`
+	UserID       int       `json:"UserID"`
+	CharacterID  int       `json:"CharacterID"`
+	PoolID       int       `json:"PoolID"`
+	TypeOfChange string    `json:"TypeOfChange"`
+	DiceBefore   []int     `json:"DiceBefore"`
+	DiceAfter    []int     `json:"DiceAfter"`
+	Date         time.Time `json:"Date"`
 }
